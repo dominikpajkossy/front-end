@@ -1,0 +1,51 @@
+html, body{
+  background: #111;
+  padding-top: 15vh;
+  font-size: 5vh;
+  
+}
+
+.container {
+    margin: auto;
+    width: 120vh;
+    border: 3px solid black;
+    padding: 10px;
+    background: #39CCCC;
+    border-radius: 20px;
+}
+.button-container{
+  width: 100%;
+  margin: auto;
+}
+.button {
+  padding: 5px;
+  width: 49%;
+  height: 10%;
+  
+  font-size: 4vh;
+  text-align: center;
+  cursor: pointer;
+  
+  
+  color: #fff;
+  background-color: #111;
+  border: none;
+  border-radius: 8px;
+  box-shadow:  9px #999;
+}
+
+.button:hover {
+ 
+}
+
+.button:active {
+  box-shadow: 0 3px #666;
+  transform: translateY(1px);
+}
+#quote-title{
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+  font-style: bold;
+}
+#quote-content{
+  font-style: italic;
+}

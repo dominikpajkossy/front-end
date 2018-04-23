@@ -1,0 +1,54 @@
+html, body{
+  background : #111;
+  color: #111;
+  font-size : 10vh;
+  margin : 0;
+  padding : 0;
+  width: 100%;
+}
+.container{
+  margin : 0;
+  padding : 0;
+  padding-top : 15vh;
+  padding-bottom : 10vh;
+  height: auto;
+  width: 100%;
+}
+.playboard{
+  padding : 0;
+  margin : auto;
+  width : 64vh;
+  height: 40vh;
+}
+.button{
+  height : 25vh;
+  width : 25vh;
+  padding: 0vh;
+  margin: 1vh;
+  line-height: 10vh;
+  vertical-align: middle;
+  text-align: center;
+  border-radius: 10px;
+  float: left;
+}
+#start{
+  background : #fff;
+  width : 52vh;
+  padding : 1vh;
+  height : 13vh;
+}
+#btn0{
+  background-color: red;
+}
+#btn1{
+  background-color: yellow;
+}
+#btn2{
+  background-color: blue;
+}
+#btn3{
+  background-color: green;
+}
+#btnc{
+  background-color: black;
+}

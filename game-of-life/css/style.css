@@ -1,0 +1,37 @@
+body, html{
+  background-color : #111;
+}
+
+#rowcontainer{
+  background-color: black;
+  width: 604px;
+  height: 364px;
+  margin: auto;
+  margin-top: 5px;
+  padding: 2px;
+}
+.cell-dead{
+  background-color: #1f1f1f;
+  width: 10px;
+  height: 10px;
+  margin : 1px;
+  float: left;
+}
+.cell-new{
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  margin : 1px;
+  float: left;
+}
+.cell-old{
+  background-color: #8B1111;
+  width: 10px;
+  height: 10px;
+  margin : 1px;
+  float: left;
+}
+
+#start-stop{
+  text-align: center;
+}

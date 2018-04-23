@@ -1,0 +1,228 @@
+//Rows : 30 , Cols : 50
+//0 : default , -1 new-cell , 1 old-cell
+const ROW = 30;
+const COL = 50;
+var defaultMatrix = [];
+
+function createRow() {
+  let row = [];
+  for (var i = 0; i < COL; i++) {
+    row.push(Math.round(Math.random() - 0.2));
+  }
+  return row;
+}
+function createMatrix() {
+  for (var i = 0; i < ROW; i++) {
+    defaultMatrix.push(createRow());
+  }
+  for (var i = 0; i < ROW; i++) {
+    defaultMatrix[i][0] = 0;
+    defaultMatrix[i][COL - 1] = 0;
+  }
+  for (var i = 0; i < COL; i++) {
+    defaultMatrix[0][i] = 0;
+    defaultMatrix[ROW - 1][i] = 0;
+  }
+}
+createMatrix();
+
+class Game extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      matrix: defaultMatrix,
+      isRunning : true
+    };
+  }
+  componentDidMount() {
+    this.timerID = setInterval( this.updateArray.bind(this) ,50);
+  }  
+  
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+  
+  clickHandler(pos) {
+      let newMatrix = this.state.matrix;
+      let row = pos[0];
+      let col = pos[1];
+    
+    if ( newMatrix[row][col] == 0 ){
+      newMatrix[row][col] = 1;
+    }else{
+      newMatrix[row][col] = 0;
+    }
+    
+      clearInterval(this.timerID);
+      this.setState({ matrix: newMatrix, isRunning : true });
+      this.timerID = setInterval( this.updateArray.bind(this) ,50);
+  }
+
+  updateArray() {
+    let tmpMatrix = this.state.matrix;
+    let newMatrix = this.state.matrix;
+
+    //Create a border
+    for (var i = 0; i < ROW; i++) {
+      tmpMatrix[i][0] = 0;
+      tmpMatrix[i][COL - 1] = 0;
+    }
+    for (var i = 0; i < COL; i++) {
+      tmpMatrix[0][i] = 0;
+      tmpMatrix[ROW - 1][i] = 0;
+    }
+
+    //Set the new cells to old cells
+    for (var i = 0; i < ROW; i++) {
+      for (var j = 0; j < COL; j++) {
+        if (tmpMatrix[i][j] === -1) {
+          tmpMatrix[i][j] = 1;
+        }
+      }
+    }
+
+    //Kill the old cells meetig the criteria
+    for (var i = 1; i < ROW - 1; i++) {
+      for (var j = 1; j < COL - 1; j++) {
+        if (tmpMatrix[i][j] === 1) {
+          //Checking if the element should die or not
+          
+          // Surrounding elements array
+          // Indexes of surrounding elements
+          // 0 1 2
+          // 3   4
+          // 5 6 7
+          let sea = []; 
+
+          sea.push(tmpMatrix[i - 1][j - 1]); //TL
+          sea.push(tmpMatrix[i - 1][j]); //TM
+          sea.push(tmpMatrix[i - 1][j + 1]); //TR
+          sea.push(tmpMatrix[i][j - 1]); //ML
+          sea.push(tmpMatrix[i][j + 1]); //MR
+          sea.push(tmpMatrix[i + 1][j - 1]); //BL
+          sea.push(tmpMatrix[i + 1][j]); //BM
+          sea.push(tmpMatrix[i + 1][j + 1]); //BR
+
+          let sumOfOldCells = 0;
+          for (var x = 0; x < sea.length; x++) {
+            if (sea[x] === 1) {
+              sumOfOldCells++;
+            }
+          }
+          if (sumOfOldCells < 2 || sumOfOldCells > 3) {
+            newMatrix[i][j] = 0;
+          } else {
+            newMatrix[i][j] = 1;
+          }
+        }
+
+        //Empty cell check
+        if (tmpMatrix[i][j] === 0) {
+          let sea = [];
+
+          sea.push(tmpMatrix[i - 1][j - 1]); //TL
+          sea.push(tmpMatrix[i - 1][j]); //TM
+          sea.push(tmpMatrix[i - 1][j + 1]); //TR
+          sea.push(tmpMatrix[i][j - 1]); //ML
+          sea.push(tmpMatrix[i][j + 1]); //MR
+          sea.push(tmpMatrix[i + 1][j - 1]); //BL
+          sea.push(tmpMatrix[i + 1][j]); //BM
+          sea.push(tmpMatrix[i + 1][j + 1]); //BR
+
+          let sumOfAliveCells = 0;
+          for (var x = 0; x < sea.length; x++) {
+            if (sea[x] === 1) {
+              sumOfAliveCells++;
+            }
+          }
+          if (sumOfAliveCells === 3) {
+            newMatrix[i][j] = -1;
+          }
+        }
+      }
+    }
+    this.setState({ matrix: newMatrix });
+  }
+
+  generatePlayGround() {
+    let playGround = [];
+    for (var i = 0; i < ROW; i++) {
+      for (var j = 0; j < COL; j++) {
+        if (this.state.matrix[i][j] == 0) {
+          let position = [];
+          position.push(i);
+          position.push(j);
+          playGround.push(
+            <div
+              className="cell-dead"
+              onClick={() => this.clickHandler(position)}
+            />
+          );
+        }
+        if (this.state.matrix[i][j] === -1) {
+          let position = [];
+          position.push(i);
+          position.push(j);
+          playGround.push(
+            <div
+              className="cell-new"
+              onClick={() => this.clickHandler(position)}
+            />
+          );
+        }
+        if (this.state.matrix[i][j] == 1) {
+          let position = [];
+          position.push(i);
+          position.push(j);
+          playGround.push(
+            <div
+              className="cell-old"
+              onClick={() => this.clickHandler(position)}
+            />
+          );
+        }
+      }
+    }
+    return <div id="rowcontainer">{playGround}</div>;
+  }
+  
+  stopBoard(){
+    this.setState({isRunning : false})
+    clearInterval(this.timerID);
+  }
+
+  startBoard(){
+    this.setState ( {matrix : defaultMatrix, isRunning : true} );
+    this.timerID = setInterval( this.updateArray.bind(this) ,50);
+  }
+  
+  startStop(){
+    if ( this.state.isRunning ){
+      return (<button className="btn btn-primary" onClick={ () => this.stopBoard() }>Stop</button>)
+    }else{
+      return (<button className="btn btn-secondary" onClick={ () => this.startBoard() }>Start</button>)
+    }
+  }
+  
+  clearBoard(){
+    let clearedBoard = this.state.matrix;
+    for ( var i = 0; i < clearedBoard[0].length; i++){
+      for ( var j = 0; j < clearedBoard[1].length; j++){
+        clearedBoard[i][j] = 0;
+      }
+    }
+    this.setState ( { matrix : clearedBoard } );
+  }
+  
+  render() {
+    return <div className="gamecontainer">
+      {this.generatePlayGround()}
+     <div id="start-stop">
+       {this.startStop()}
+      <button className="btn btn-danger" onClick={ () => this.clearBoard() }>Clear</button>
+     </div>
+    </div>;
+  }
+}
+
+ReactDOM.render(<Game />, document.getElementById("element"));
